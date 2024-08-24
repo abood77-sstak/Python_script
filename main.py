@@ -2,9 +2,9 @@
 import os
 from telethon import TelegramClient, events
 
-API_ID = os.environ("api_id")
-API_HASH = os.environ("api_hash")
-BOT_TOKEM = os.environ("token_bot")
+API_ID = os.environ["api_id"]
+API_HASH = os.environ["api_hash"]
+BOT_TOKEM = os.environ["token_bot"]
 
 
 client = TelegramClient ("mbot", API_ID, API_HASH)
