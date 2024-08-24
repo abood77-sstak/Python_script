@@ -1,5 +1,8 @@
    name: Run Python Script
-
+   env:
+       API_ID : ${{secrets.API_ID}}
+       API_HASH : ${{secrets.API_HASH}}
+       BOT_TOKEN : ${{secrets.BOT_TOKEN}}
    on:
      push:
        branches: [main]
