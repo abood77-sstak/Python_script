@@ -15,5 +15,3 @@ async def handler (event):
 
 client.start()
 client.run_until_disconnected()
-
-
