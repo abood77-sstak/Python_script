@@ -1,7 +1,7 @@
    name: Run Python Script
    env:
-       API_ID : ${{secrets.API_ID}}
-       API_HASH : ${{secrets.API_HASH}}
+       API_ID : ${{secrets.API_ID2}}
+       API_HASH : ${{secrets.API_HASH2}}
        BOT_TOKEN : ${{secrets.BOT_TOKEN}}
    on:
      push:
