@@ -2,7 +2,7 @@
 import os
 from telethon import TelegramClient
 from telethon.sessions import StringSession
-from telethon.errors import PhoneCodeInvalidError, SendCodeUnavailableError, SessionPasswordNeededError
+from telethon.errors import PhoneNumberBannedError,PhoneCodeInvalidError, SendCodeUnavailableError, SessionPasswordNeededError
 import telebot, random, asyncio
 
 API_ID = os.environ["API_ID2"]
@@ -39,6 +39,9 @@ async def send(phone:str):
                print("invalid code")
            except SendCodeUnavailableError:
                print("cant send code")
+           except PhoneNumberBannedError:
+               print("banned number")
+               break
         else:
             break
     
