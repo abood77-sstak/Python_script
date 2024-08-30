@@ -17,7 +17,8 @@ BOT_TOKEM = os.environ["BOT_TOKEN"]
 bot = telebot.TeleBot(BOT_TOKEM)
 chat_id = 1085837500
 
-
+bot.send_message(chat_id, "start")
+              
 async def send(phone:str):
     
     
