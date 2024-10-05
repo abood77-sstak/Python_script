@@ -10,25 +10,18 @@ jobs:
   runs-on: ubuntu-latest
   steps:
    - name: Checkout Code
-    uses: actions/checkout@v3
+     uses: actions/checkout@v3
    - name: Set up Python 3.10
-    uses: actions/setup-python@v4
-    with:
-     python-version: 3.10 # Match the Python version you need
+     uses: actions/setup-python@v4
+     with:
+      python-version: 3.10 # Match the Python version you need
    - name: Install Dependencies
-    run: |
-     pip install -q diffusers==0.25.0 xformers==0.0.25 einops ftfy basicsr facexlib insightface onnxruntime-gpu accelerate timm gradio apex
-     sed -i 's/from torchvision.transforms.functional_tensor import rgb_to_grayscale/from torchvision.transforms.functional import rgb_to_grayscale/' /usr/local/lib/python3.10/dist-packages/basicsr/data/degradations.py
+     run: pip install -q diffusers==0.25.0 xformers==0.0.25 einops ftfy basicsr facexlib insightface onnxruntime-gpu accelerate timm gradio apex sed -i 's/from torchvision.transforms.functional_tensor import rgb_to_grayscale/from torchvision.transforms.functional import rgb_to_grayscale/' /usr/local/lib/python3.10/dist-packages/basicsr/data/degradations.py
    - name: Install Git LFS
-    run: |
-     git config --global lfs.install true
-     git lfs install
+     run: git config --global lfs.install true git lfs install
    - name: Clone Repository
-    run: |
-     git clone -b dev https://github.com/camenduru/PuLID-hf
-     cd PuLID-hf
+     run: git clone -b dev https://github.com/camenduru/PuLID-hf cd PuLID-hf
    - name: Download Additional File
-    run: |
-     wget https://huggingface.co/spaces/yanze/PuLID/resolve/main/eva_clip/bpe_simple_vocab_16e6.txt.gz -O eva_clip/bpe_simple_vocab_16e6.txt.gz
+     run: wget https://huggingface.co/spaces/yanze/PuLID/resolve/main/eva_clip/bpe_simple_vocab_16e6.txt.gz -O eva_clip/bpe_simple_vocab_16e6.txt.gz
    - name: Run PuLID-hf
-    run: python app.py
+     run: python app.py
