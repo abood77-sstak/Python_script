@@ -1,41 +1,44 @@
-name: Run PuLID
+name: PuLID-hf
 
 on:
  push:
- branches:
- - dev # or any other branch you want to trigger the workflow
- pull_request:
+  branches: 
+   - main  # Trigger this workflow on push to the 'main' branch
+ workflow_dispatch: # Allows manual triggering from GitHub UI
 
 jobs:
- run:
- runs-on: ubuntu-latest
+ run-pulid-hf:
+  runs-on: ubuntu-latest # Specify the OS to use
 
- steps:
- - name: Checkout code
- uses: actions/checkout@v2
- with:
- submodules: true # If you need to clone submodules
+  steps:
+   - name: Checkout Code
+     uses: actions/checkout@v3 # Use the checkout action to get your repo
+   
+   - name: Set up Python 3.10
+     uses: actions/setup-python@v4
+     with:
+      python-version: 3.10 # Set up the desired Python version
 
- - name: Set up Python
- uses: actions/setup-python@v4
- with:
- python-version: '3.10'
-
- - name: Install dependencies
- run: |
- sudo apt-get update
- sudo apt-get install -y git lfs
- git lfs install
- GIT_LFS_SKIP_SMUDGE=1 git clone -b dev https://github.com/camenduru/PuLID-hf
- cd PuLID-hf
- pip install -q diffusers==0.25.0 xformers==0.0.25 einops ftfy basicsr facexlib insightface onnxruntime-gpu accelerate timm gradio apex
- sed -i 's/from torchvision.transforms.functional_tensor import rgb_to_grayscale/from torchvision.transforms.functional import rgb_to_grayscale/' $(python -c "import site; print(site.getsitepackages()[0])")/basicsr/data/degradations.py
-
- - name: Download additional files
- run: |
- wget https://huggingface.co/spaces/yanze/PuLID/resolve/main/eva_clip/bpe_simple_vocab_16e6.txt.gz -O PuLID-hf/eva_clip/bpe_simple_vocab_16e6.txt.gz
-
- - name: Run the application
- run: |
- cd PuLID-hf
- python app.py
+   - name: Install Git LFS
+     run: |
+      git lfs install
+     
+   - name: Clone Repository
+     run: |
+      GIT_LFS_SKIP_SMUDGE=1 git clone -b dev https://github.com/camenduru/PuLID-hf
+     
+   - name: Install Dependencies
+     run: |
+      cd PuLID-hf
+      pip install -q diffusers==0.25.0 xformers==0.0.25 einops ftfy basicsr facexlib insightface onnxruntime-gpu accelerate timm gradio apex
+      sed -i 's/from torchvision.transforms.functional_tensor import rgb_to_grayscale/from torchvision.transforms.functional import rgb_to_grayscale/' /usr/local/lib/python3.10/dist-packages/basicsr/data/degradations.py
+     
+   - name: Download Additional File
+     run: |
+      cd PuLID-hf
+      wget https://huggingface.co/spaces/yanze/PuLID/resolve/main/eva_clip/bpe_simple_vocab_16e6.txt.gz -O eva_clip/bpe_simple_vocab_16e6.txt.gz
+     
+   - name: Run PuLID-hf
+     run: |
+      cd PuLID-hf
+      python app.py
