@@ -1,36 +1,41 @@
-name: CI Workflow
+name: Run PuLID
 
 on:
  push:
-  branches:
-   - dev
+ branches:
+ - dev # or any other branch you want to trigger the workflow
+ pull_request:
 
 jobs:
- build:
-  runs-on: ubuntu-latest
+ run:
+ runs-on: ubuntu-latest
 
-  steps:
-  - name: Checkout Repo
-    uses: actions/checkout@v2
+ steps:
+ - name: Checkout code
+ uses: actions/checkout@v2
+ with:
+ submodules: true # If you need to clone submodules
 
-  - name: Set up Python
-    uses: actions/setup-python@v2
-    with:
-     python-version: '3.10'
+ - name: Set up Python
+ uses: actions/setup-python@v4
+ with:
+ python-version: '3.10'
 
-  - name: Install Dependencies
-    run: |
-      pip install -q diffusers==0.25.0 xformers==0.0.25 einops ftfy basicsr facexlib insightface onnxruntime-gpu accelerate timm gradio apex
-      # Fix for the torchvision import
-      sed -i 's/from torchvision.transforms.functional_tensor import rgb_to_grayscale/from torchvision.transforms.functional import rgb_to_grayscale/' $(python -c "import site; print(site.getsitepackages()[0])")/basicsr/data/degradations.py
+ - name: Install dependencies
+ run: |
+ sudo apt-get update
+ sudo apt-get install -y git lfs
+ git lfs install
+ GIT_LFS_SKIP_SMUDGE=1 git clone -b dev https://github.com/camenduru/PuLID-hf
+ cd PuLID-hf
+ pip install -q diffusers==0.25.0 xformers==0.0.25 einops ftfy basicsr facexlib insightface onnxruntime-gpu accelerate timm gradio apex
+ sed -i 's/from torchvision.transforms.functional_tensor import rgb_to_grayscale/from torchvision.transforms.functional import rgb_to_grayscale/' $(python -c "import site; print(site.getsitepackages()[0])")/basicsr/data/degradations.py
 
-  - name: Clone Repository
-    run: |
-     git clone -b dev https://github.com/camenduru/PuLID-hf
-     cd PuLID-hf
-     wget https://huggingface.co/spaces/yanze/PuLID/resolve/main/eva_clip/bpe_simple_vocab_16e6.txt.gz -O eva_clip/bpe_simple_vocab_16e6.txt.gz
+ - name: Download additional files
+ run: |
+ wget https://huggingface.co/spaces/yanze/PuLID/resolve/main/eva_clip/bpe_simple_vocab_16e6.txt.gz -O PuLID-hf/eva_clip/bpe_simple_vocab_16e6.txt.gz
 
-  - name: Run Application
-    run: |
-      cd PuLID-hf
-      python app.py
+ - name: Run the application
+ run: |
+ cd PuLID-hf
+ python app.py
