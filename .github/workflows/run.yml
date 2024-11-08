@@ -1,44 +1,27 @@
-name: PuLID-hf
-
+name: Run Python Script
+env:
+       API_ID : ${{secrets.API_ID}}
+       API_HASH : ${{secrets.API_HASH}}
+       BOT_TOKEN : ${{secrets.BOT_TOKEN}}
 on:
- push:
-  branches: 
-   - main  # Trigger this workflow on push to the 'main' branch
- workflow_dispatch: # Allows manual triggering from GitHub UI
+   push:
+       branches: [main]
 
 jobs:
- run-pulid-hf:
-  runs-on: ubuntu-latest # Specify the OS to use
+     run_the_script:
+       runs-on: ubuntu-latest
 
-  steps:
-   - name: Checkout Code
-     uses: actions/checkout@v3 # Use the checkout action to get your repo
-   
-   - name: Set up Python 3.10
-     uses: actions/setup-python@v4
-     with:
-      python-version: 3.10 # Set up the desired Python version
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v3
 
-   - name: Install Git LFS
-     run: |
-      git lfs install
-     
-   - name: Clone Repository
-     run: |
-      GIT_LFS_SKIP_SMUDGE=1 git clone -b dev https://github.com/camenduru/PuLID-hf
-     
-   - name: Install Dependencies
-     run: |
-      cd PuLID-hf
-      pip install -q diffusers==0.25.0 xformers==0.0.25 einops ftfy basicsr facexlib insightface onnxruntime-gpu accelerate timm gradio apex
-      sed -i 's/from torchvision.transforms.functional_tensor import rgb_to_grayscale/from torchvision.transforms.functional import rgb_to_grayscale/' /usr/local/lib/python3.10/dist-packages/basicsr/data/degradations.py
-     
-   - name: Download Additional File
-     run: |
-      cd PuLID-hf
-      wget https://huggingface.co/spaces/yanze/PuLID/resolve/main/eva_clip/bpe_simple_vocab_16e6.txt.gz -O eva_clip/bpe_simple_vocab_16e6.txt.gz
-     
-   - name: Run PuLID-hf
-     run: |
-      cd PuLID-hf
-      python app.py
+         - name: Set up Python
+           uses: actions/setup-python@v4
+           with:
+             python-version: '3.x'
+
+         - name: Install dependencies 
+           run: pip install -r requirements.txt
+
+         - name: run script
+           run: python main.py
