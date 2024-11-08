@@ -14,7 +14,7 @@ def web_driver():
     return driver
 
 my_token = "6517080417:AAHQx2gxkQ5Sxs2GilTyCaOI4-jJZfIGaho"
-chat_id =7031532556
+chat_id =1085837500
 bot = telebot.TeleBot(my_token)
 
 driver= web_driver()
